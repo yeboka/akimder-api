@@ -1,0 +1,36 @@
+# Node.js dependencies
+/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# WebStorm project files
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Build output
+/dist/
+/build/
+
+# Dependency directories
+bower_components/
+
+# Temporary files
+*.swp
+*.swo
+
+# Editor specific files
+.vscode/
+
+# npm package lock file (optional, if you don't want to track it)
+package-lock.json
+# Or if you're using yarn:
+# yarn.lock

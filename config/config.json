@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "akimder",
+    "password": "akimder",
+    "database": "akimder",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "akimder",
+    "password": "akimder",
+    "database": "akimder",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "akimder",
+    "password": "akimder",
+    "database": "akimder",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}
