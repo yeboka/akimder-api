@@ -22,9 +22,9 @@ app.use(express.json()); // For parsing application/json
 
 // Routes
 app.use('/api/hello', helloRoutes);
-app.use('/auth', authRoutes);
-app.use('/protected', protectedRoutes);
-app.use('/akimat', akimatRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/protected', protectedRoutes);
+app.use('/api/akimat', akimatRoutes);
 app.use('/api/news', newsRoutes);
 
 // Error handling middleware
