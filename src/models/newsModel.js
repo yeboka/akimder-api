@@ -1,7 +1,5 @@
-// src/models/newsModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/dbConfig');
-const Akimat = require('./akimatModel'); // Reference to Akimat model
 
 const News = sequelize.define('News', {
     id: {
@@ -9,14 +7,9 @@ const News = sequelize.define('News', {
         primaryKey: true,
         autoIncrement: true,
     },
-    akimat_id: {
+    akimat_id: { // Foreign key to the Akimat model
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: Akimat,   // Reference to Akimat model
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
     },
     title_ru: {
         type: DataTypes.STRING,
@@ -42,6 +35,10 @@ const News = sequelize.define('News', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    image_url: { // New field
+        type: DataTypes.STRING,
+        allowNull: true, // Can be optional
+    },
     view_count: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
@@ -50,5 +47,9 @@ const News = sequelize.define('News', {
     timestamps: true,
     tableName: 'news',
 });
+
+News.associate = (models) => {
+    News.belongsTo(models.Akimat, { foreignKey: 'akimat_id', as: 'akimat' });
+};
 
 module.exports = News;

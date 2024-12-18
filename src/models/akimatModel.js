@@ -1,4 +1,3 @@
-// src/models/akimatModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/dbConfig');
 
@@ -56,5 +55,9 @@ const Akimat = sequelize.define('Akimat', {
     timestamps: true,
     tableName: 'akimats',
 });
+
+Akimat.associate = (models) => {
+    Akimat.hasMany(models.News, { foreignKey: 'akimat_id', as: 'news' });
+};
 
 module.exports = Akimat;

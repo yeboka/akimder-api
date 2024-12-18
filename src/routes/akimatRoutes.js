@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
             id: akimat.id,
             title: akimat[`title_${lang}`],  // Localized title based on language
             description: akimat[`description_${lang}`], // Localized description based on language
-            address: akimat.address,
+            address: akimat[`address_${lang}`],
             email: akimat.email,
             contacts: akimat.contacts,
         }));
@@ -52,9 +52,15 @@ router.get('/:id', async (req, res) => {
         // Return localized Akimat
         res.status(200).json({
             id: akimat.id,
-            title: akimat[`title_${lang}`],  // Localized title based on language
-            description: akimat[`description_${lang}`], // Localized description based on language
-            address: akimat.address,
+            title_ru: akimat.title_ru,
+            title_kk: akimat.title_kk,
+            title_en: akimat.title_en,
+            description_ru: akimat.description_ru, // Localized description based on language
+            description_kk: akimat.description_kk, // Localized description based on language
+            description_en: akimat.description_en, // Localized description based on language
+            address_ru: akimat.address_ru,
+            address_kk: akimat.address_kk,
+            address_en: akimat.address_en,
             email: akimat.email,
             contacts: akimat.contacts,
         });
@@ -66,7 +72,7 @@ router.get('/:id', async (req, res) => {
 
 // POST: Create Akimat (Protected)
 router.post('/', authenticate, async (req, res) => {
-    const { title_ru, title_kk, title_en, description_ru, description_kk, description_en, address, email, contacts } = req.body;
+    const { title_ru, title_kk, title_en, description_ru, description_kk, description_en, address_ru, address_kk, address_en, email, contacts } = req.body;
 
     try {
         // Create Akimat with localized fields
@@ -77,7 +83,9 @@ router.post('/', authenticate, async (req, res) => {
             description_ru,
             description_kk,
             description_en,
-            address,
+            address_ru,
+            address_kk,
+            address_en,
             email,
             contacts,
         });
