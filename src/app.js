@@ -15,7 +15,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*', // Use a specific domain in production
+    origin: '*', // Use a specific domain in production
 })); // Enable CORS for all routes
 
 app.use(express.json()); // For parsing application/json
