@@ -7,6 +7,14 @@ const Akimat = sequelize.define('Akimat', {
         primaryKey: true,
         autoIncrement: true,
     },
+    parent_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true, // Root Akimats won't have a parent
+        references: {
+            model: 'akimats', // Reference the same table
+            key: 'id',
+        },
+    },
     title_ru: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -51,12 +59,46 @@ const Akimat = sequelize.define('Akimat', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    region_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    region_image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    region_description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    head_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    head_image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    head_description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
     tableName: 'akimats',
 });
 
 Akimat.associate = (models) => {
+    Akimat.hasMany(models.Akimat, {
+        foreignKey: 'parent_id',
+        as: 'child_akimats',
+    });
+
+    Akimat.belongsTo(models.Akimat, {
+        foreignKey: 'parent_id',
+        as: 'parent_akimat',
+    });
+
     Akimat.hasMany(models.News, { foreignKey: 'akimat_id', as: 'news' });
 };
 

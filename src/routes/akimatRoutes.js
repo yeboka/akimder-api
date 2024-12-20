@@ -7,8 +7,7 @@ const getPreferredLanguage = (req) => {
     const language = req.headers['accept-language'];
     if (language) {
         // Get the first language in the list (e.g., 'en', 'ru', 'kk')
-        const lang = language.split(',')[0].toLowerCase();
-        return lang;
+        return language.split(',')[0].toLowerCase();
     }
     // Default to 'en' if no language is found
     return 'en';
@@ -16,7 +15,6 @@ const getPreferredLanguage = (req) => {
 
 const router = express.Router();
 
-// GET: Fetch all Akimats (Public)
 router.get('/', async (req, res) => {
     try {
         const lang = getPreferredLanguage(req); // Determine language from headers
@@ -42,64 +40,84 @@ router.get('/', async (req, res) => {
 // GET: Fetch Akimat by ID (Public)
 router.get('/:id', async (req, res) => {
     try {
-        const lang = getPreferredLanguage(req); // Determine language from headers
         const akimat = await Akimat.findByPk(req.params.id);
 
         if (!akimat) {
             return res.status(404).json({ message: 'Akimat not found' });
         }
 
-        // Return localized Akimat
+        const childs = await Akimat.findAll({
+            where: { parent_id: akimat.id },
+            attributes: ['id', 'title_ru', 'title_kk', 'title_en'],
+        });
+
         res.status(200).json({
             id: akimat.id,
             title_ru: akimat.title_ru,
             title_kk: akimat.title_kk,
             title_en: akimat.title_en,
-            description_ru: akimat.description_ru, // Localized description based on language
-            description_kk: akimat.description_kk, // Localized description based on language
-            description_en: akimat.description_en, // Localized description based on language
+            description_ru: akimat.description_ru,
+            description_kk: akimat.description_kk,
+            description_en: akimat.description_en,
             address_ru: akimat.address_ru,
             address_kk: akimat.address_kk,
             address_en: akimat.address_en,
             email: akimat.email,
             contacts: akimat.contacts,
+            region_name: akimat.region_name,
+            region_image: akimat.region_image,
+            region_description: akimat.region_description,
+            head_name: akimat.head_name,
+            head_image: akimat.head_image,
+            head_description: akimat.head_description,
+            parent_id: akimat.parent_id,
+            childs,
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 });
+
 
 // POST: Create Akimat (Protected)
 router.post('/', authenticate, async (req, res) => {
-    const { title_ru, title_kk, title_en, description_ru, description_kk, description_en, address_ru, address_kk, address_en, email, contacts } = req.body;
+    const {
+        title_ru, title_kk, title_en,
+        description_ru, description_kk, description_en,
+        address_ru, address_kk, address_en,
+        email, contacts,
+        region_name, region_image, region_description,
+        head_name, head_image, head_description,
+        parent_id
+    } = req.body;
 
     try {
-        // Create Akimat with localized fields
         const newAkimat = await Akimat.create({
-            title_ru,
-            title_kk,
-            title_en,
-            description_ru,
-            description_kk,
-            description_en,
-            address_ru,
-            address_kk,
-            address_en,
-            email,
-            contacts,
+            title_ru, title_kk, title_en,
+            description_ru, description_kk, description_en,
+            address_ru, address_kk, address_en,
+            email, contacts,
+            region_name, region_image, region_description,
+            head_name, head_image, head_description,
         });
 
-        res.status(201).json(newAkimat);  // Return newly created Akimat
+        res.status(201).json(newAkimat);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 });
 
-// PUT: Update Akimat (Protected)
 router.put('/:id', authenticate, async (req, res) => {
-    const { title_ru, title_kk, title_en, description_ru, description_kk, description_en, address, email, contacts } = req.body;
+    const {
+        title_ru, title_kk, title_en,
+        description_ru, description_kk, description_en,
+        address, email, contacts,
+        region_name, region_image, region_description,
+        head_name, head_image, head_description,
+        parent_id
+    } = req.body;
 
     try {
         const akimat = await Akimat.findByPk(req.params.id);
@@ -108,7 +126,6 @@ router.put('/:id', authenticate, async (req, res) => {
             return res.status(404).json({ message: 'Akimat not found' });
         }
 
-        // Update Akimat with localized fields if provided
         akimat.title_ru = title_ru || akimat.title_ru;
         akimat.title_kk = title_kk || akimat.title_kk;
         akimat.title_en = title_en || akimat.title_en;
@@ -118,16 +135,23 @@ router.put('/:id', authenticate, async (req, res) => {
         akimat.address = address || akimat.address;
         akimat.email = email || akimat.email;
         akimat.contacts = contacts || akimat.contacts;
+        akimat.region_name = region_name || akimat.region_name;
+        akimat.region_image = region_image || akimat.region_image;
+        akimat.region_description = region_description || akimat.region_description;
+        akimat.head_name = head_name || akimat.head_name;
+        akimat.head_image = head_image || akimat.head_image;
+        akimat.head_description = head_description || akimat.head_description;
+        akimat.parent_id = parent_id || null;
 
         await akimat.save();
 
-        // Return the updated Akimat
         res.status(200).json(akimat);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 });
+
 
 // DELETE: Delete Akimat (Protected)
 router.delete('/:id', authenticate, async (req, res) => {
