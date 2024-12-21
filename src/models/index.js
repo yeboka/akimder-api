@@ -3,11 +3,13 @@ const sequelize = require('../config/dbConfig');
 
 const Akimat = require('./akimatModel');
 const News = require('./newsModel');
+const Advertisement = require('./advertisementModel');
 
 // Все модели
 const models = {
   Akimat: Akimat,
   News: News,
+  Advertisement: Advertisement,
 };
 
 // Устанавливаем ассоциации

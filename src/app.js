@@ -9,6 +9,7 @@ const protectedRoutes = require('./routes/protected');
 const akimatRoutes = require('./routes/akimatRoutes');  // Import the Akimat route
 const newsRoutes = require('./routes/newsRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const advertisementRoutes = require('./routes/advertiementRoutes');
 
 dotenv.config(); // Load environment variables from .env
 
@@ -28,6 +29,7 @@ app.use('/api/protected', protectedRoutes);
 app.use('/api/akimat', akimatRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/advertisement', advertisementRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -59,7 +59,15 @@ const Akimat = sequelize.define('Akimat', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    region_name: {
+    region_name_ru: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    region_name_kk: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    region_name_en: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -67,11 +75,27 @@ const Akimat = sequelize.define('Akimat', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    region_description: {
+    region_description_ru: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
-    head_name: {
+    region_description_kk: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    region_description_en: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    head_name_ru: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    head_name_kk: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    head_name_en: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -79,7 +103,15 @@ const Akimat = sequelize.define('Akimat', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    head_description: {
+    head_description_ru: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    head_description_kk: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    head_description_en: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
