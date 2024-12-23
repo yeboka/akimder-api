@@ -24,6 +24,36 @@ router.get('/', async (req, res) => {
         // Return localized Akimats
         const localizedAkimats = akimats.map((akimat) => ({
             id: akimat.id,
+            type: akimat.type,
+            title: akimat[`title_${lang}`],
+            description: akimat[`description_${lang}`],
+            address: akimat[`address_${lang}`],
+            email: akimat.email,
+            contacts: akimat.contacts,
+            region_description: akimat[`region_description_${lang}`],
+            head_name: akimat[`head_name_${lang}`],
+            head_description: akimat[`head_description_${lang}`],
+        }));
+
+        res.status(200).json(localizedAkimats);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// GET: Fetch only regional Akimats (Localized)
+router.get('/regions', async (req, res) => {
+    try {
+        const lang = getPreferredLanguage(req); // Determine language from headers
+        const akimats = await Akimat.findAll({
+            where: { type: 'regional' },
+        });
+
+        // Return localized Akimats
+        const localizedAkimats = akimats.map((akimat) => ({
+            id: akimat.id,
+            type: akimat.type,
             title: akimat[`title_${lang}`],
             description: akimat[`description_${lang}`],
             address: akimat[`address_${lang}`],
@@ -58,6 +88,7 @@ router.get('/:id', async (req, res) => {
 
         res.status(200).json({
             id: akimat.id,
+            type: akimat.type,
             title_ru: akimat.title_ru,
             title_kk: akimat.title_kk,
             title_en: akimat.title_en,
@@ -94,6 +125,7 @@ router.get('/:id', async (req, res) => {
 // POST: Create Akimat (Protected)
 router.post('/', authenticate, async (req, res) => {
     const {
+        type,
         title_ru, title_kk, title_en,
         description_ru, description_kk, description_en,
         address_ru, address_kk, address_en,
@@ -108,6 +140,7 @@ router.post('/', authenticate, async (req, res) => {
 
     try {
         const newAkimat = await Akimat.create({
+            type,
             title_ru, title_kk, title_en,
             description_ru, description_kk, description_en,
             address_ru, address_kk, address_en,
@@ -130,6 +163,7 @@ router.post('/', authenticate, async (req, res) => {
 // PUT: Update Akimat (Protected)
 router.put('/:id', authenticate, async (req, res) => {
     const {
+        type,
         title_ru, title_kk, title_en,
         description_ru, description_kk, description_en,
         address_ru, address_kk, address_en,
@@ -149,6 +183,7 @@ router.put('/:id', authenticate, async (req, res) => {
             return res.status(404).json({ message: 'Akimat not found' });
         }
 
+        akimat.type = type || akimat.type;
         akimat.title_ru = title_ru || akimat.title_ru;
         akimat.title_kk = title_kk || akimat.title_kk;
         akimat.title_en = title_en || akimat.title_en;

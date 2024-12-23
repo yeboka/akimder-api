@@ -15,6 +15,14 @@ const Akimat = sequelize.define('Akimat', {
             key: 'id',
         },
     },
+    type: {
+        type: DataTypes.ENUM('regional', 'district'), // Adding the type field
+        allowNull: false,
+        defaultValue: 'district', // Default to district type
+        validate: {
+            isIn: [['regional', 'district']],
+        },
+    },
     title_ru: {
         type: DataTypes.STRING,
         allowNull: false,
