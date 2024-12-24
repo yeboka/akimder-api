@@ -19,7 +19,12 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const lang = getPreferredLanguage(req); // Determine language from headers
-        const akimats = await Akimat.findAll();
+        const { type } = req.query; // Extract type parameter from query string
+
+        // Fetch Akimats, optionally filtering by type
+        const akimats = type
+            ? await Akimat.findAll({ where: { type } })
+            : await Akimat.findAll();
 
         // Return localized Akimats
         const localizedAkimats = akimats.map((akimat) => ({
@@ -89,6 +94,7 @@ router.get('/:id', async (req, res) => {
         res.status(200).json({
             id: akimat.id,
             type: akimat.type,
+            parent_id: akimat.parent_id,
             title_ru: akimat.title_ru,
             title_kk: akimat.title_kk,
             title_en: akimat.title_en,

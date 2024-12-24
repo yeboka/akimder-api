@@ -20,7 +20,7 @@ const Akimat = sequelize.define('Akimat', {
         allowNull: false,
         defaultValue: 'district', // Default to district type
         validate: {
-            isIn: [['regional', 'district']],
+            isIn: [['regional', 'district', 'village']],
         },
     },
     title_ru: {

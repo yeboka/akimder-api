@@ -69,13 +69,13 @@ router.post('/login', async (req, res) => {
         // Find user by phoneNumber
         const user = await User.findOne({ where: { phoneNumber } });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Пользователь не найден' });
         }
 
         // Check if password is correct
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Invalid password' });
+            return res.status(401).json({ message: 'Неверный пароль' });
         }
 
         // Generate JWT token
@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Something went wrong' });
+        res.status(500).json({ message: 'Что то пошло нет так' });
     }
 });
 
