@@ -123,6 +123,18 @@ const Akimat = sequelize.define('Akimat', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
+    whatsapp: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    instagram: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    telegram: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
     tableName: 'akimats',

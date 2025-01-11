@@ -6,10 +6,8 @@ const { authenticate } = require('../middlewares/auth'); // Protecting routes wi
 const getPreferredLanguage = (req) => {
     const language = req.headers['accept-language'];
     if (language) {
-        // Get the first language in the list (e.g., 'en', 'ru', 'kk')
         return language.split(',')[0].toLowerCase();
     }
-    // Default to 'en' if no language is found
     return 'en';
 };
 
@@ -18,15 +16,13 @@ const router = express.Router();
 // GET: Fetch all Akimats (Localized)
 router.get('/', async (req, res) => {
     try {
-        const lang = getPreferredLanguage(req); // Determine language from headers
-        const { type } = req.query; // Extract type parameter from query string
+        const lang = getPreferredLanguage(req);
+        const { type } = req.query;
 
-        // Fetch Akimats, optionally filtering by type
         const akimats = type
             ? await Akimat.findAll({ where: { type } })
             : await Akimat.findAll();
 
-        // Return localized Akimats
         const localizedAkimats = akimats.map((akimat) => ({
             id: akimat.id,
             type: akimat.type,
@@ -35,6 +31,9 @@ router.get('/', async (req, res) => {
             address: akimat[`address_${lang}`],
             email: akimat.email,
             contacts: akimat.contacts,
+            whatsapp: akimat.whatsapp,
+            instagram: akimat.instagram,
+            telegram: akimat.telegram,
             region_description: akimat[`region_description_${lang}`],
             head_name: akimat[`head_name_${lang}`],
             head_description: akimat[`head_description_${lang}`],
@@ -47,7 +46,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET: Fetch only regional Akimats (Localized)
 router.get('/regions', async (req, res) => {
     try {
         const lang = getPreferredLanguage(req); // Determine language from headers
@@ -59,15 +57,15 @@ router.get('/regions', async (req, res) => {
         const localizedAkimats = akimats.map((akimat) => ({
             id: akimat.id,
             type: akimat.type,
-            title: akimat[`title_${lang}`],
-            description: akimat[`description_${lang}`],
-            address: akimat[`address_${lang}`],
+            title: akimat["title_${lang}"],
+            description: akimat["description_${lang}"],
+            address: akimat["address_${lang}"],
             email: akimat.email,
             contacts: akimat.contacts,
-            region_description: akimat[`region_description_${lang}`],
-            head_name: akimat[`head_name_${lang}`],
-            head_description: akimat[`head_description_${lang}`],
-        }));
+            region_description: akimat["region_description_${lang}"],
+            head_name: akimat["head_name_${lang}"],
+            head_description: akimat["head_description_${lang}"],
+        }))
 
         res.status(200).json(localizedAkimats);
     } catch (error) {
@@ -79,7 +77,7 @@ router.get('/regions', async (req, res) => {
 // GET: Fetch Akimat by ID (Localized)
 router.get('/:id', async (req, res) => {
     try {
-        const lang = getPreferredLanguage(req); // Determine language from headers
+        const lang = getPreferredLanguage(req);
         const akimat = await Akimat.findByPk(req.params.id);
 
         if (!akimat) {
@@ -106,6 +104,9 @@ router.get('/:id', async (req, res) => {
             address_en: akimat.address_en,
             email: akimat.email,
             contacts: akimat.contacts,
+            whatsapp: akimat.whatsapp,
+            instagram: akimat.instagram,
+            telegram: akimat.telegram,
             region_name_ru: akimat.region_name_ru,
             region_name_kk: akimat.region_name_kk,
             region_name_en: akimat.region_name_en,
@@ -135,7 +136,7 @@ router.post('/', authenticate, async (req, res) => {
         title_ru, title_kk, title_en,
         description_ru, description_kk, description_en,
         address_ru, address_kk, address_en,
-        email, contacts,
+        email, contacts, whatsapp, instagram, telegram,
         region_name_ru, region_name_kk, region_name_en, region_image,
         region_description_ru, region_description_kk, region_description_en,
         head_name_ru, head_name_kk, head_name_en,
@@ -150,7 +151,7 @@ router.post('/', authenticate, async (req, res) => {
             title_ru, title_kk, title_en,
             description_ru, description_kk, description_en,
             address_ru, address_kk, address_en,
-            email, contacts,
+            email, contacts, whatsapp, instagram, telegram,
             region_name_ru, region_name_kk, region_name_en, region_image,
             region_description_ru, region_description_kk, region_description_en,
             head_name_ru, head_name_kk, head_name_en,
@@ -173,7 +174,7 @@ router.put('/:id', authenticate, async (req, res) => {
         title_ru, title_kk, title_en,
         description_ru, description_kk, description_en,
         address_ru, address_kk, address_en,
-        email, contacts,
+        email, contacts, whatsapp, instagram, telegram,
         region_name_ru, region_name_kk, region_name_en, region_image,
         region_description_ru, region_description_kk, region_description_en,
         head_name_ru, head_name_kk, head_name_en,
@@ -201,6 +202,9 @@ router.put('/:id', authenticate, async (req, res) => {
         akimat.address_en = address_en || akimat.address_en;
         akimat.email = email || akimat.email;
         akimat.contacts = contacts || akimat.contacts;
+        akimat.whatsapp = whatsapp || akimat.whatsapp;
+        akimat.instagram = instagram || akimat.instagram;
+        akimat.telegram = telegram || akimat.telegram;
         akimat.region_name_ru = region_name_ru || akimat.region_name_ru;
         akimat.region_name_kk = region_name_kk || akimat.region_name_kk;
         akimat.region_name_en = region_name_en || akimat.region_name_en;
