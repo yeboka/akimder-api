@@ -57,15 +57,16 @@ router.get('/regions', async (req, res) => {
         const localizedAkimats = akimats.map((akimat) => ({
             id: akimat.id,
             type: akimat.type,
-            title: akimat["title_${lang}"],
-            description: akimat["description_${lang}"],
-            address: akimat["address_${lang}"],
+            title: akimat[`title_${lang}`],
+            description: akimat[`description_${lang}`],
+            address: akimat[`address_${lang}`],
             email: akimat.email,
             contacts: akimat.contacts,
-            region_description: akimat["region_description_${lang}"],
-            head_name: akimat["head_name_${lang}"],
-            head_description: akimat["head_description_${lang}"],
+            region_description: akimat[`region_description_${lang}`],
+            head_name: akimat[`head_name_${lang}`],
+            head_description: akimat[`head_description_${lang}`],
         }))
+
 
         res.status(200).json(localizedAkimats);
     } catch (error) {
