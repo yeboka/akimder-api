@@ -1,5 +1,6 @@
 const express = require('express');
 const Akimat = require('../models/akimatModel');
+const { News } = require('../models');
 const { authenticate } = require('../middlewares/auth'); // Protecting routes with token validation
 
 // Helper function to get the preferred language from the headers
@@ -227,6 +228,50 @@ router.put('/:id', authenticate, async (req, res) => {
         res.status(200).json(akimat);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// DELETE: Delete Akimat (Protected)
+router.delete('/:id', authenticate, async (req, res) => {
+    const { id } = req.params;
+
+    const transaction = await Akimat.sequelize.transaction();
+    try {
+        const akimat = await Akimat.findByPk(id, { transaction });
+
+        if (!akimat) {
+            await transaction.rollback();
+            return res.status(404).json({ message: 'Akimat not found' });
+        }
+
+        const deleteRecursively = async (akimatId) => {
+            // Find children first
+            const children = await Akimat.findAll({
+                where: { parent_id: akimatId },
+                attributes: ['id'],
+                transaction,
+            });
+
+            // Recursively delete each child
+            for (const child of children) {
+                await deleteRecursively(child.id);
+            }
+
+            // Delete related news
+            await News.destroy({ where: { akimat_id: akimatId }, transaction });
+
+            // Delete the akimat itself
+            await Akimat.destroy({ where: { id: akimatId }, transaction });
+        };
+
+        await deleteRecursively(akimat.id);
+
+        await transaction.commit();
+        return res.status(200).json({ message: 'Akimat and related records deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        await transaction.rollback();
         res.status(500).json({ message: 'Something went wrong' });
     }
 });
